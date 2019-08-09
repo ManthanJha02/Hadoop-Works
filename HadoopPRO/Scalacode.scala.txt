@@ -1,0 +1,6 @@
+final case class Rating(movieId: int, rating: int)
+
+val lines = sc.textFile("hdfs:///tmp/ml-100k/u.data").map
+				(x => {val fields = x.split("\t"); Rating(fields(1).toint, fields(2).toInt)})
+				-----
+				

@@ -1,0 +1,51 @@
+#Pig Session - 1
+
+
+-----------------------
+Creating a relation from another relation with Generate/ForEach 
+ratings = LOAD 'users/admin/u.list' AS (mmovieID:int, movieRating: int);
+
+metadata = LOAD 'user/admin/u.item' USING
+					PigStorage('|') AS (movieID: int,movieTitle: chararray,releaseDate: chararray);
+					
+nameLookup = FOREACH metadata GENERATE movieID,movieTitle,ToUnixTime(ToDate(releaseDate, 'dd-mmm-yyyy')) AS releaseTime;
+
+ratingsByMovie = Group ratings by movieID;
+
+avgRatings = FOREACH ratingsByMovie GENERATE group as movieID, AVG(ratings.rating) as avgRating;
+
+fiveStarMovies = FILTER avgRatings by avgRating > 4.0;
+
+fiveStarsWithData = JOIN fiveStarMovies BY movieID,nameLookup BY movieID;
+
+oldestFiveStarMovies = ORDER fiveStarsWithData BY nameLookup::releaseTime;
+DUMP oldestFiveStarMovies;
+--------------
+Practice - 1
+
+ratings = LOAD 'users/admin/u.list' AS (mmovieID:int, movieRating: int);
+
+metadata = LOAD 'user/admin/u.item' USING
+					PigStorage('|') AS (movieID: int,movieTitle: chararray,releaseDate: chararray);
+					
+nameLookUp = FOREACH metadata GENERATE movieID,movieTitle
+					
+ratingsByMovie = Group movieRating by movieID;
+
+avgRatings = FOREACH ratingsByMovie GENERATE group as movieID,AVG(ratings.movieRating) as avgRating, COUNT(ratings.movieRating) as numRating;
+
+dumboMovies = FILTER avgRatings by avgRating < 2.0;
+
+dumboStarMovie = JOIN dumboMovies BY movieID, nameLookup BY movieID;
+
+finalResult = FOREACH dumboStarMovie GENERATE nameLookup::movieTitle as movieName,dumboMovies::avgRating AS avgRating, dumboMovies::numRatings as numRatings;
+
+dumbestMovie = ORDER finalResult BY numRatings DESC;
+
+DUMP dumbestMovie;
+
+
+
+
+
+

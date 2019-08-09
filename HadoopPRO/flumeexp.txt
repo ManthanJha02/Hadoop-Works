@@ -1,0 +1,21 @@
+#Flume Example
+	
+		# Name the components on this agent
+		a1.source = r1
+		a1.sink = k1
+		a1.channels = c1
+		
+		#Describe / Configure the source
+		a1.source.r1.type = netcat
+		a1.source.r1.bind = localhost
+		a1.source.r1.port = 44444
+		
+		#Describe the sink
+		a1.sink.k1.type = logger
+		
+		#Use a channel which buffers events in MEMORY
+		a1.channels.c1.type = memory
+		
+		# Bind source and sink to channel
+		a1.source.r1.channel = c1
+		a1.sink.k1,channel = c1
