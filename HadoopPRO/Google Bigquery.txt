@@ -1,0 +1,17 @@
+Google BigQuery 
+--- Data Ingestion---
+	1. Reading from TextFile
+	PCollection<String> lines = p.apply(TextIO.Read.from("gs://path"));
+	
+	2.Reading from Google PubSUb
+	PCollection<String> lines = p.apply.(PubsubIO.Read.from("input topic"));
+	
+	3.BigQuery returns a TableRow
+	String Javaquery = Select a,b,c from [project:dataset:table]
+	PCollection<TableRow> javaContent = p.apply.(BigQueryIO.Read.from(Javaquery))
+	
+---- Writing into files
+
+lines.apply(TextIO.Write.to("path name").withSuffix(".txt"));
+
+------------------------------

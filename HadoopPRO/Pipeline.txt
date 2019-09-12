@@ -1,0 +1,18 @@
+To run on cloud- Executing pipeline(Python)---
+
+python ./filename.py \
+--project=$PROJECTNAME \
+--job_name=myJob \
+--staging_location=gs://$BUCKET/staging/ \
+--temp_location=gs://$BUCKET/staging/ \
+--runner=DataflowRunner
+
+-------- Python flatmap v map --------
+'wordLengths' >>beam.Map(lambda word: (word,len(word)) )
+
+---- FlatMap usually used for filtering
+def my_grep(line, term):
+if term in line
+yield line
+
+'Grep' >>beam.Flatmap(lambda line: my_grep(line, searchTerm) )
